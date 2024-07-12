@@ -6,7 +6,7 @@ while getopts "d:" opt; do
    esac
 done
 
-OUPUT_DIR="/scratch-shared/mycostreams/images"
+OUPUT_DIR="/scratch-shared/$USER/images"
 mkdir -p $OUPUT_DIR
 
 OUTPUT_FILE="$DATE_STR.json"

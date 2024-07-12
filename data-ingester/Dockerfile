@@ -26,4 +26,4 @@ WORKDIR /app
 
 COPY --from=builder ${VENV_PATH} ${VENV_PATH}
 
-COPY ./amf_data_pull /app/amf_data_pull
+COPY ./data_ingester /app/data_ingester

@@ -14,8 +14,8 @@ async def remote_ingest(ctx: dict, *, _date: date | None = None):
 
 async def startup(ctx: dict):
     settings = Settings(
-        username=os.environ["username"],
-        password=os.environ["password"],
+        username=os.environ["USERNAME"],
+        password=os.environ["PASSWORD"],
     )
 
     ctx["data_ingester"] = DataIngester(settings)
