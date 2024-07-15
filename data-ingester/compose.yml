@@ -1,0 +1,27 @@
+---
+
+services:
+  data-ingester:
+    build:
+      context: .
+    command: ["arq", "data_ingester.worker.WorkerSettings"]
+    environment:
+      - REDIS_DSN=redis://redis:6379
+      - USERNAME=$USERNAME
+      - PASSWORD=$PASSWORD
+    volumes:
+      - ./data_ingester:/app/data_ingester
+      - ${SSH_HOSTS_PATH:-~/.ssh/known_hosts}:/root/.ssh/known_hosts:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:7.2.4
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
