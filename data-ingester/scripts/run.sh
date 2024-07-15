@@ -3,9 +3,9 @@
 DATE_STR=${1:-$(date +"%Y%m%d")}
 
 OUPUT_DIR="/scratch-shared/$USER/images"
-mkdir -p $OUPUT_DIR
-
 OUTPUT_FILE="$DATE_STR.json"
+
+mkdir -p $OUPUT_DIR
 
 # List files and save
 rclone lsjson swift:prince-data-dev \
