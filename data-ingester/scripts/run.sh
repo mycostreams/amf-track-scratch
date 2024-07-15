@@ -1,10 +1,6 @@
 #!/bin/bash
 
-while getopts "d:" opt; do
-   case "$opt" in
-       d) DATE_STR=${OPTARG};;
-   esac
-done
+DATE_STR=${1:-$(date +"%Y%m%d")}
 
 OUPUT_DIR="/scratch-shared/$USER/images"
 mkdir -p $OUPUT_DIR
