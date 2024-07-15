@@ -1,3 +1,9 @@
+# Overview
+
+This sample project provides a mechanism to SSH into Snellius and trigger a job that 
+lists all files available for a given day and stores them as a json.
+
+
 # Snellius setup
 
 Install project on snellius with:
