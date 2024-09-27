@@ -7,10 +7,13 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+arq = "^0.26.1"
+fastapi-slim = "^0.115.0"
+fastapi-cli-slim = "^0.0.5"
 httpx = "^0.27.2"
-s3fs = "^2024.9.0"
 pydantic = "^2.9.2"
 pydantic-settings = "^2.5.2"
+s3fs = "^2024.9.0"
 
 
 [tool.ruff.lint]
@@ -23,9 +26,7 @@ select = [
     "C4",  # flake8-comprehensions
     "UP",  # pyupgrade
 ]
-exclude = [
-    "tests/e2e/*"
-]
+
 
 
 [build-system]
