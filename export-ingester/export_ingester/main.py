@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     AWS_SECRET_ACCESS_KEY: str
     AWS_ENDPOINT_URL: HttpUrl
     BUCKET_NAME: str = "mycostreams-dev-559d46"
-    
+
     BASE_URL: HttpUrl = "http://tsu-dsk001.ipa.amolf.nl"
 
     model_config = SettingsConfigDict(
