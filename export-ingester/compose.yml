@@ -1,0 +1,12 @@
+---
+
+services:
+  s3:
+    image: localstack/localstack:latest
+    hostname: localhost.localstack.cloud
+    ports:
+      - 127.0.0.1:4566:4566
+    environment:
+      SERVICES: "s3"
+    volumes:
+      - "./scripts/init-localstack.sh:/etc/localstack/init/ready.d/init-localstack.sh"
