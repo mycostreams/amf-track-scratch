@@ -59,7 +59,7 @@ async def run_ingestion(ctx: dict, *, _date: date | None = None):
 
 class WorkerSettings:
     cron_jobs = [
-        cron(run_ingestion, hour={8}),
+        cron(run_ingestion, hour={3}, minute={0}),
     ]
 
     timezone = ZoneInfo("Europe/Amsterdam")
