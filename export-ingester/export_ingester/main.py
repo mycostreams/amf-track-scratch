@@ -1,13 +1,16 @@
 import asyncio
+from datetime import date
 
 from .config import Settings
-from .ingest import get_managed_context, ingest_exports
+from .ingest import get_managed_export_ingester
+from .models import ExportParams
 
 
 async def main():
     settings = Settings()
-    async with get_managed_context(settings) as context:
-        await ingest_exports(context)
+    remote = f"{settings.BUCKET_NAME}/{date.today()}.json"
+    async with get_managed_export_ingester(settings) as export_ingester:
+        await export_ingester.ingest(remote, ExportParams())
 
 
 if __name__ == "__main__":
