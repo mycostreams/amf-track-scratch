@@ -174,5 +174,7 @@ poetry.toml
 pyrightconfig.json
 
 .vscode
+scratch/
+sftp-data/
 
 # End of https://www.toptal.com/developers/gitignore/api/python

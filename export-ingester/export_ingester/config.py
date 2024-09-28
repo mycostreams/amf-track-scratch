@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     SFTP_PASSWORD: str
     SFTP_HOST: str
 
-    BASE_URL: HttpUrl = "http://tsu-dsk001.ipa.amolf.nl"
+    BASE_URL: HttpUrl
 
     model_config = SettingsConfigDict(
         env_file=Path(__file__).parent.parent / ".env",

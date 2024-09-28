@@ -18,6 +18,14 @@ services:
     volumes:
       - "./export_ingester:/app/export_ingester"
 
+  redis:
+    image: redis:7.2.4
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   mock-api:
     image: export-ingester
     command: ["fastapi", "dev", "export_ingester/test_utils.py", "--host=0.0.0.0"]
@@ -32,16 +40,8 @@ services:
     image: atmoz/sftp
     command: "foo:pass:1001"
     volumes:
-      - ./upload:/home/foo/upload
+      - ./sftp-data:/home/foo/upload
     ports:
       - "127.0.0.1:2222:22"
     profiles:
       - dev
-
-  redis:
-    image: redis:7.2.4
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
