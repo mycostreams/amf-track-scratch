@@ -1,6 +1,5 @@
 import logging
 import os
-from contextlib import AsyncExitStack
 from datetime import date
 
 from arq import cron
@@ -20,15 +19,7 @@ async def startup(ctx: dict):
 
     logging.info("Starting up")
 
-    settings = Settings()
-
-    ctx["settings"] = settings
-
-async def shutdown(ctx: dict):
-    logging.info("Shutting down")
-
-    stack: AsyncExitStack = ctx["stack"]
-    stack: AsyncExitStack = await stack.aclose()
+    ctx["settings"] = Settings()
 
 
 async def run_ingestion(ctx: dict, *, _date: date | None = None):
@@ -46,7 +37,7 @@ class WorkerSettings:
     timezone = ZoneInfo("Europe/Amsterdam")
 
     on_startup = startup
-    on_shutdown = shutdown
+
     redis_settings = RedisSettings.from_dsn(
         os.getenv("REDIS_DSN", "redis://localhost:6379"),
     )
