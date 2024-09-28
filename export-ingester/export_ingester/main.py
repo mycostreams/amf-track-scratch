@@ -8,7 +8,7 @@ from .models import ExportParams
 
 async def main():
     settings = Settings()
-    remote = f"{settings.BUCKET_NAME}/{date.today()}.json"
+    remote = f"upload/{date.today()}.json"
     async with get_managed_export_ingester(settings) as export_ingester:
         await export_ingester.ingest(remote, ExportParams())
 

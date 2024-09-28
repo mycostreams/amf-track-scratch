@@ -52,7 +52,7 @@ async def run_ingestion(ctx: dict, *, _date: date | None = None):
     state: State = ctx["state"]
     date_ = _date or date.today()
     await state.export_ingester.ingest(
-        f"{state.settings.BUCKET_NAME}/{date_}.json",
+        f"uploads/{date_}.json",
         ExportParams(),
     )
 

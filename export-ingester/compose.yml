@@ -1,17 +1,17 @@
 ---
 
 services:
-  event-ingester:
-    image: event-ingester
+  export-ingester:
+    image: export-ingester
     build:
       context: .
     command: ["arq", "export_ingester.worker.WorkerSettings"]
     environment: 
       REDIS_DSN: redis://redis:6379
       BASE_URL: ${BASE_URL:-http://mock-api:8000}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
-      AWS_SECRET_ACCESS_KEY: ${AWS_ACCESS_KEY_ID:-test}
-      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://s3:4566}
+      SFTP_USERNAME: ${SFTP_USERNAME:-foo}
+      SFTP_PASSWORD: ${SFTP_USERNAME:-pass}
+      SFTP_HOST: ${SFTP_HOST:-sftp}
     depends_on:
       redis:
         condition: service_healthy
@@ -19,12 +19,22 @@ services:
       - "./export_ingester:/app/export_ingester"
 
   mock-api:
-    image: event-ingester
+    image: export-ingester
     command: ["fastapi", "dev", "export_ingester/test_utils.py", "--host=0.0.0.0"]
     ports:
-      - 8000:8000
+      - 127.0.0.0.1:8000:8000
     volumes:
       - "./export_ingester:/app/export_ingester"
+    profiles:
+      - dev
+
+  sftp:
+    image: atmoz/sftp
+    command: "foo:pass:1001"
+    volumes:
+      - ./upload:/home/foo/upload
+    ports:
+      - "127.0.0.1:2222:22"
     profiles:
       - dev
 
@@ -35,15 +45,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  s3:
-    image: localstack/localstack:latest
-    ports:
-      - 127.0.0.1:4566:4566
-    environment:
-      SERVICES: "s3"
-    volumes:
-      - "./scripts/init-localstack.sh:/etc/localstack/init/ready.d/init-localstack.sh"
-    profiles:
-      - dev
-

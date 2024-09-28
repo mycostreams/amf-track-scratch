@@ -1,6 +1,16 @@
 
-Run in dev mode:
+To manually trigger the ingestion run:
 
-```Bash
+```bash
+docker compose up sftp mock-api
+docker compose run --rm --no-deps export-ingester python -m export_ingeser.main
+docker compose down --profile down
+```
+
+
+To trigger the ingestion via cron jobs run:
+
+```bash
 docker compose --profile dev up
 ```
+
