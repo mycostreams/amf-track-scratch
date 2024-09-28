@@ -30,7 +30,7 @@ services:
     image: export-ingester
     command: ["fastapi", "dev", "export_ingester/test_utils.py", "--host=0.0.0.0"]
     ports:
-      - 127.0.0.0.1:8000:8000
+      - 127.0.0.1:8000:8000
     volumes:
       - "./export_ingester:/app/export_ingester"
     profiles:
@@ -40,7 +40,7 @@ services:
     image: atmoz/sftp
     command: "foo:pass:1001"
     volumes:
-      - ./sftp-data:/home/foo/upload
+      - ./sftp-data:/home/foo/daily-uploads
     ports:
       - "127.0.0.1:2222:22"
     profiles:

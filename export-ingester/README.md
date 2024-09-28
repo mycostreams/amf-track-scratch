@@ -3,7 +3,7 @@ To manually trigger the ingestion run:
 
 ```bash
 docker compose up sftp mock-api
-docker compose run --rm --no-deps export-ingester python -m export_ingeser.main
+docker compose run --rm --no-deps export-ingester python -m export_ingester.main
 docker compose down --profile down
 ```
 

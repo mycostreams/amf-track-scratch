@@ -14,7 +14,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 WORKDIR /app
 
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --only main && rm -rf $POETRY_CACHE_DIR
+RUN poetry install --with dev && rm -rf $POETRY_CACHE_DIR
 
 
 # The runtime image, used to just run the code provided its virtual environment
