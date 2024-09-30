@@ -1,0 +1,29 @@
+name: export-ingester
+on:
+  pull_request:
+    paths: 
+      - 'export-ingester/**'
+      - '.github/workflows/export-ingester.yaml'
+  push:
+    branches:
+      - main
+    paths: 
+      - 'export-ingester/**'
+      - '.github/workflows/export-ingester.yaml'
+
+defaults:
+  run:
+    working-directory: ./export-ingester
+
+jobs:
+  static-analysis:
+    name: Static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Linting
+        uses: chartboost/ruff-action@v1
+      - name: Formating
+        uses: chartboost/ruff-action@v1
+        with:
+          args: 'format --check'
