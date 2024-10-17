@@ -10,7 +10,7 @@ services:
       REDIS_DSN: redis://redis:6379
       BASE_URL: ${BASE_URL:-http://mock-api:8000}
       SFTP_USERNAME: ${SFTP_USERNAME:-foo}
-      SFTP_PASSWORD: ${SFTP_USERNAME:-pass}
+      SFTP_PASSWORD: ${SFTP_PASSWORD:-pass}
       SFTP_HOST: ${SFTP_HOST:-sftp}
     depends_on:
       redis:
