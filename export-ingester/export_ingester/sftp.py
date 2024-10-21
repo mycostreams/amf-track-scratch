@@ -22,17 +22,33 @@ class SFTPClient:
         async with self.client.open(path, "wb") as f:
             await f.write(mapper(exports))
 
+
+class SSHClient:
+    def __init__(self, conn: asyncssh.SSHClientConnection):
+        self.conn = conn
+
     async def remote_sbatch(self, sbatch_command: str, remote: str) -> str:
         """Executes the sbatch command on the remote server."""
         try:
-            result = await self.client.run(f"{sbatch_command} {remote}", check=True)
+            result = await self.conn.run(f"{sbatch_command} {remote}", check=True)
             return result.stdout  # Return the output of the sbatch command
         except asyncssh.Error as e:
             print(f"Error running sbatch command: {str(e)}")
             return ""
 
+    async def pipe_exports(
+        self,
+        path: str,
+        exports: list[ExportModel],
+        *,
+        _mapper: Callable[[list[ExportModel]], bytes] | None = None,
+    ):
+        mapper = _mapper or partial(ExportList.dump_json, indent=4)
+        async with self.conn.start_sftp_client().open(path, "wb") as f:
+            await f.write(mapper(exports))
 
-class SFTPClientFactory:
+
+class SSHClientFactory:
     def __init__(
         self,
         username: str,
@@ -44,13 +60,13 @@ class SFTPClientFactory:
         self.password = password
 
     @asynccontextmanager
-    async def get_sftp_client(self) -> AsyncGenerator[SFTPClient, None]:
+    async def get_ssh_client(self) -> AsyncGenerator[SSHClient, None]:
+        """Context manager to manage the SSH connection."""
         managed_conn = asyncssh.connect(
+            host=self.host,
             username=self.username,
             password=self.password,
-            host=self.host,
             known_hosts=None,
         )
         async with managed_conn as conn:
-            async with conn.start_sftp_client() as sftp:
-                yield SFTPClient(sftp)
+            yield SSHClient(conn)
