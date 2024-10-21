@@ -44,8 +44,9 @@ class SSHClient:
         _mapper: Callable[[list[ExportModel]], bytes] | None = None,
     ):
         mapper = _mapper or partial(ExportList.dump_json, indent=4)
-        async with self.conn.start_sftp_client().open(path, "wb") as f:
-            await f.write(mapper(exports))
+        async with self.conn.start_sftp_client() as sftp_client:
+            async with sftp_client.open(path, "wb") as f:
+                await f.write(mapper(exports))
 
 
 class SSHClientFactory:
