@@ -45,4 +45,3 @@ class SFTPClientFactory:
         async with managed_conn as conn:
             async with conn.start_sftp_client() as sftp:
                 yield SFTPClient(sftp)
-

@@ -46,7 +46,6 @@ class ExportIngester:
         self.sftp_client = sftp_client
         self.ssh_client = ssh_client
 
-
     async def ingest(
         self,
         remote_path: str,
@@ -58,7 +57,7 @@ class ExportIngester:
         )
         await self.run_sbatch_command()
 
-    async def run_sbatch_command(self,sbatch_command):
+    async def run_sbatch_command(self, sbatch_command):
         """Runs the sbatch command on the remote server via SSH."""
         await self.ssh_client.remote_sbatch(
             sbatch_command,
@@ -85,9 +84,7 @@ async def get_managed_export_ingester(
     sftp_client = await stack.enter_async_context(sftp_client_factory.get_sftp_client())
     ssh_client = await stack.enter_async_context(ssh_client_factory.get_ssh_client())
     yield ExportIngester(
-        APIClient(str(settings.BASE_URL), http_client),
-        sftp_client,
-        ssh_client
+        APIClient(str(settings.BASE_URL), http_client), sftp_client, ssh_client
     )
 
     await stack.aclose()
