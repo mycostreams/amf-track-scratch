@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     SFTP_USERNAME: str
     SFTP_PASSWORD: str
     SFTP_HOST: str
+    SBATCH_COMMAND: str
 
     BASE_URL: HttpUrl
 
