@@ -18,6 +18,7 @@ async def main():
 
 if __name__ == "__main__":
     env_path = Path(__file__).parent.parent / ".env"
+    print(env_path)
     # Read and print the contents of the file
     if env_path.exists():
         with open(env_path, 'r') as file:
