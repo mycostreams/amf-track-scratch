@@ -7,22 +7,6 @@ import asyncssh
 from .models import ExportList, ExportModel
 
 
-class SFTPClient:
-    def __init__(self, client: asyncssh.SFTPClient):
-        self.client = client
-
-    async def pipe_exports(
-        self,
-        path: str,
-        exports: list[ExportModel],
-        *,
-        _mapper: Callable[[list[ExportModel]], bytes] | None = None,
-    ):
-        mapper = _mapper or partial(ExportList.dump_json, indent=4)
-        async with self.client.open(path, "wb") as f:
-            await f.write(mapper(exports))
-
-
 class SSHClient:
     def __init__(self, conn: asyncssh.SSHClientConnection):
         self.conn = conn
