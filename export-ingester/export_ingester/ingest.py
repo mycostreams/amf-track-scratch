@@ -3,7 +3,6 @@ from contextlib import AsyncExitStack, asynccontextmanager
 from typing import AsyncGenerator, Callable
 
 import httpx
-import asyncssh
 
 from .config import Settings
 from .models import ExportList, ExportModel, ExportParams
@@ -43,10 +42,12 @@ class ExportIngester:
         self,
         api_client: APIClient,
         sftp_client: SFTPClient,
-        ssh_client: SSHCLient,
+        ssh_client: SSHClient,
     ):
         self.api_client = api_client
         self.sftp_client = sftp_client
+        self.ssh_client = ssh_client
+
 
     async def ingest(
         self,
