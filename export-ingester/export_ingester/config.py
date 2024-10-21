@@ -11,12 +11,6 @@ class Settings(BaseSettings):
     BASE_URL: HttpUrl
     SBATCH_COMMAND: str
 
-    env_path = Path(__file__).parent.parent / ".env"
-    # Read and print the contents of the file
-    if env_path.exists():
-        with open(env_path, 'r') as file:
-            contents = file.read()
-            print(contents)
     model_config = SettingsConfigDict(
         env_file=Path(__file__).parent.parent / ".env",
         env_file_encoding="utf-8",
