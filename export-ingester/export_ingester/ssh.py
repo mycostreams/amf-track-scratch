@@ -14,8 +14,9 @@ class SSHClient:
             result = await self.client.run(sbatch_command, check=True)
             return result.stdout  # Return the output of the sbatch command
         except asyncssh.Error as e:
-            print(f'Error running sbatch command: {str(e)}')
+            print(f"Error running sbatch command: {str(e)}")
             return ""
+
 
 class SSHClientFactory:
     def __init__(

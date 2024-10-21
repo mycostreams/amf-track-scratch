@@ -5,10 +5,13 @@ from .config import Settings
 from .ingest import get_managed_export_ingester
 from .models import ExportParams
 
-command = "sbatch " \
-          "/gpfs/home4/mkerrwinter/orchestrator/orchestrator/" \
-          "bash_scripts/downloader.sh" \
-          " /scratch-shared/amftrack2024/daily"
+command = (
+    "sbatch "
+    "/gpfs/home4/mkerrwinter/orchestrator/orchestrator/"
+    "bash_scripts/downloader.sh"
+    " /scratch-shared/amftrack2024/daily"
+)
+
 
 async def main():
     settings = Settings()
