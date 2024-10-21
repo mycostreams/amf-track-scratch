@@ -1,6 +1,5 @@
 from contextlib import asynccontextmanager
-from functools import partial
-from typing import AsyncGenerator, Callable
+from typing import AsyncGenerator
 
 import asyncssh
 
