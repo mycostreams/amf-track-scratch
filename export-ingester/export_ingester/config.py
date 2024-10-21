@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     SFTP_HOST: str
     BASE_URL: HttpUrl
     SBATCH_COMMAND: str
-
+    print(Path(__file__).parent.parent / ".env")
 
     model_config = SettingsConfigDict(
         env_file=Path(__file__).parent.parent / ".env",
