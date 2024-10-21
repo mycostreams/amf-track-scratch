@@ -3,10 +3,14 @@ from contextlib import AsyncExitStack, asynccontextmanager
 from typing import AsyncGenerator, Callable
 
 import httpx
+import asyncssh
 
 from .config import Settings
 from .models import ExportList, ExportModel, ExportParams
 from .sftp import SFTPClient, SFTPClientFactory
+from .ssh import SSHClient, SSHClientFactory
+
+
 
 
 class APIClient:
@@ -39,6 +43,7 @@ class ExportIngester:
         self,
         api_client: APIClient,
         sftp_client: SFTPClient,
+        ssh_client: SSHCLient,
     ):
         self.api_client = api_client
         self.sftp_client = sftp_client
@@ -51,6 +56,13 @@ class ExportIngester:
         await self.sftp_client.pipe_exports(
             remote_path,
             await self.api_client.get_exports(params),
+        )
+        await self.run_sbatch_command()
+
+    async def run_sbatch_command(self,sbatch_command):
+        """Runs the sbatch command on the remote server via SSH."""
+        await self.ssh_client.remote_sbatch(
+            sbatch_command,
         )
 
 
@@ -65,13 +77,18 @@ async def get_managed_export_ingester(
         settings.SFTP_PASSWORD,
         settings.SFTP_HOST,
     )
-
+    ssh_client_factory = SSHClientFactory(
+        settings.SFTP_USERNAME,
+        settings.SFTP_PASSWORD,
+        settings.SFTP_HOST,
+    )
     http_client = await stack.enter_async_context(httpx.AsyncClient())
     sftp_client = await stack.enter_async_context(sftp_client_factory.get_sftp_client())
-
+    ssh_client = await stack.enter_async_context(ssh_client_factory.get_ssh_client())
     yield ExportIngester(
         APIClient(str(settings.BASE_URL), http_client),
         sftp_client,
+        ssh_client
     )
 
     await stack.aclose()
