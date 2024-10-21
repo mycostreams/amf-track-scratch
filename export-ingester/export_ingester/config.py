@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     SFTP_HOST: str
     BASE_URL: HttpUrl
     SBATCH_COMMAND: str
-    env_path = Path(__file__).parent.parent / ".env"
 
+    env_path = Path(__file__).parent.parent / ".env"
     # Read and print the contents of the file
     if env_path.exists():
         with open(env_path, 'r') as file:
