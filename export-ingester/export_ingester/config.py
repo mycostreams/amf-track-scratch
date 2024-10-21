@@ -2,7 +2,7 @@ from pathlib import Path
 
 from pydantic import HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
-l
+
 
 class Settings(BaseSettings):
     SFTP_USERNAME: str
