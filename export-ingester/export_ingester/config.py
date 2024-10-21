@@ -2,14 +2,14 @@ from pathlib import Path
 
 from pydantic import HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
+l
 
 class Settings(BaseSettings):
     SFTP_USERNAME: str
     SFTP_PASSWORD: str
     SFTP_HOST: str
     BASE_URL: HttpUrl
-    SBATCH_COMMAND: str
+    # SBATCH_COMMAND: str
 
 
     model_config = SettingsConfigDict(
