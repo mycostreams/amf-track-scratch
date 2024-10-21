@@ -12,6 +12,8 @@ services:
       SFTP_USERNAME: ${SFTP_USERNAME:-foo}
       SFTP_PASSWORD: ${SFTP_PASSWORD:-pass}
       SFTP_HOST: ${SFTP_HOST:-sftp}
+      SBATCH_COMMAND: ${SFTP_HOST:-sbatch}
+
     depends_on:
       redis:
         condition: service_healthy
