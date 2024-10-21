@@ -1,5 +1,6 @@
 import asyncio
 from datetime import date
+from pathlib import Path
 
 from .config import Settings
 from .ingest import get_managed_export_ingester
@@ -16,4 +17,10 @@ async def main():
 
 
 if __name__ == "__main__":
+    env_path = Path(__file__).parent.parent / ".env"
+    # Read and print the contents of the file
+    if env_path.exists():
+        with open(env_path, 'r') as file:
+            contents = file.read()
+            print(contents)
     asyncio.run(main())
