@@ -22,6 +22,15 @@ class SFTPClient:
         async with self.client.open(path, "wb") as f:
             await f.write(mapper(exports))
 
+    async def remote_sbatch(self, sbatch_command: str, remote: str) -> str:
+        """Executes the sbatch command on the remote server."""
+        try:
+            result = await self.client.run(f"{sbatch_command} {remote}", check=True)
+            return result.stdout  # Return the output of the sbatch command
+        except asyncssh.Error as e:
+            print(f"Error running sbatch command: {str(e)}")
+            return ""
+
 
 class SFTPClientFactory:
     def __init__(
