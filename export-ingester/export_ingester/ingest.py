@@ -11,8 +11,6 @@ from .sftp import SFTPClient, SFTPClientFactory
 from .ssh import SSHClient, SSHClientFactory
 
 
-
-
 class APIClient:
     def __init__(
         self,
