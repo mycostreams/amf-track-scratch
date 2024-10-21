@@ -55,7 +55,6 @@ class ExportIngester:
             remote_path,
             await self.api_client.get_exports(params),
         )
-        await self.run_sbatch_command()
 
     async def run_sbatch_command(self, sbatch_command):
         """Runs the sbatch command on the remote server via SSH."""
