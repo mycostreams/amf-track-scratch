@@ -1,16 +1,19 @@
 import asyncio
-from datetime import date
+from datetime import date, timedelta
 
 from .config import Settings
 from .ingest import get_managed_export_ingester
 from .models import ExportParams
+from .utils import get_range
 
 
 async def main():
     settings = Settings()
     remote = f"daily-uploads/{date.today()}.json"
+    date_ = (date.today() - timedelta(days=7))
+    start, end = get_range(date_)
     async with get_managed_export_ingester(settings) as export_ingester:
-        await export_ingester.ingest(remote, ExportParams())
+        await export_ingester.ingest(remote, ExportParams(start=start, end=end))
         await export_ingester.run_sbatch_command(settings.SBATCH_COMMAND, remote)
 
 
