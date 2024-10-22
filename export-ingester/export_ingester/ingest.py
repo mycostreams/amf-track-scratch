@@ -1,3 +1,4 @@
+import asyncio
 import urllib.parse
 from contextlib import AsyncExitStack, asynccontextmanager
 from typing import AsyncGenerator, Callable
@@ -5,7 +6,7 @@ from typing import AsyncGenerator, Callable
 import httpx
 
 from .config import Settings
-from .models import ExportList, ExportModel, ExportParams
+from .models import ExportModel, ExportParams, ExportsModel
 from .sftp import SFTPClient, SFTPClientFactory
 
 
@@ -14,24 +15,43 @@ class APIClient:
         self,
         base_url: str,
         client: httpx.AsyncClient,
+        *,
+        _mapper: Callable[[bytes], ExportsModel] = ExportsModel.model_validate_json,
     ):
         self.base_url = base_url
         self.client = client
+        self.mapper = _mapper
 
-    async def get_exports(
+    async def get_exports(self, params: ExportParams) -> list[ExportModel]:
+        return [item async for item in self.stream_exports(params)]
+
+    async def stream_exports(
         self,
         params: ExportParams,
-        *,
-        _mapper: Callable[[bytes], list[ExportModel]] | None = None,
-    ) -> list[ExportModel]:
+    ) -> AsyncGenerator[ExportModel, None]:
+        default_params = params.model_dump(mode="json", by_alias=True)
+
+        initial_data = await self._get_response({"offset": 0, **default_params})
+        for item in initial_data.data:
+            yield item
+
+        tasks: list[asyncio.Task[ExportsModel]] = []
+        for index in range(initial_data.count // params.limit):
+            next_params = {"offset": (index + 1) * params.limit, **default_params}
+            tasks.append(asyncio.create_task(self._get_response(next_params)))
+
+        for task in asyncio.as_completed(tasks):
+            next_data = await task
+            for item in next_data.data:
+                yield item
+
+    async def _get_response(self, params: dict) -> ExportsModel:
         response = await self.client.get(
             urllib.parse.urljoin(self.base_url, "/api/1/exports"),
             headers={"Host": "fastapi.localhost"},
-            params=params.model_dump(mode="json", by_alias=True),
+            params=params,
         )
-
-        mapper = _mapper or ExportList.validate_json
-        return mapper(response.content)
+        return self.mapper(response.content)
 
 
 class ExportIngester:
