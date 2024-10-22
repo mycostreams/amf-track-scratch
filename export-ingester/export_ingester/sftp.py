@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 from functools import partial
 from typing import AsyncGenerator, Callable
@@ -17,8 +18,7 @@ class SSHClient:
             result = await self.conn.run(f"{sbatch_command} {remote}", check=True)
             return result.stdout  # Return the output of the sbatch command
         except asyncssh.Error as e:
-            print(f"Error running sbatch command: {str(e)}")
-            return ""
+            logging.warning(f"Error running sbatch command: {str(e)}")
 
     async def pipe_exports(
         self,
