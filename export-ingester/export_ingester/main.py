@@ -11,7 +11,7 @@ async def main():
     settings = Settings()
     # remote = f"daily-uploads/{date.today()}.json"
     remote = f"/scratch-shared/amftrack2024/daily/{date.today()}.json"
-    time_range = 7
+    time_range = 1
     date_ = (date.today() - timedelta(days=time_range))
     start, end = get_range(date_,time_range)
     async with get_managed_export_ingester(settings) as export_ingester:
