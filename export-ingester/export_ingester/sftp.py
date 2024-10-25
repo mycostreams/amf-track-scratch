@@ -15,7 +15,9 @@ class SSHClient:
     async def remote_sbatch(self, sbatch_command: str, remote: str) -> str:
         """Executes the sbatch command on the remote server."""
         try:
-            print(f"sbatch command is '{sbatch_command} {remote}'") #For development purpose
+            print(
+                f"sbatch command is '{sbatch_command} {remote}'"
+            )  # For development purpose
             result = await self.conn.run(f"{sbatch_command} {remote}", check=True)
             return result.stdout  # Return the output of the sbatch command
         except asyncssh.Error as e:
