@@ -4,6 +4,7 @@ from datetime import date, timedelta
 
 from arq import cron
 from arq.connections import RedisSettings
+from scipy.constants import minute
 from zoneinfo import ZoneInfo
 
 from .ingest import Settings, get_managed_export_ingester
@@ -38,7 +39,7 @@ async def run_ingestion(ctx: dict, *, _date: date | None = None):
 
 class WorkerSettings:
     cron_jobs = [
-        cron(run_ingestion, hour={16}),
+        cron(run_ingestion, hour={16},minute={20}),
     ]
 
     timezone = ZoneInfo("Europe/Amsterdam")
