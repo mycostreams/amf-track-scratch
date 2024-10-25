@@ -30,9 +30,7 @@ async def run_ingestion(ctx: dict, *, _date: date | None = None):
     date_ = date.today() - timedelta(days=time_range)
     start, end = get_range(date_, time_range)
     async with get_managed_export_ingester(settings) as ingester:
-        await ingester.ingest(
-            f"daily-uploads/{date_}.json", ExportParams(start=start, end=end)
-        )
+        await ingester.ingest(remote, ExportParams(start=start, end=end))
         await ingester.run_sbatch_command(settings.SBATCH_COMMAND, remote)
 
 
