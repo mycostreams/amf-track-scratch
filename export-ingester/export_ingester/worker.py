@@ -4,7 +4,6 @@ from datetime import date, timedelta
 
 from arq import cron
 from arq.connections import RedisSettings
-from scipy.constants import minute
 from zoneinfo import ZoneInfo
 
 from .ingest import Settings, get_managed_export_ingester
