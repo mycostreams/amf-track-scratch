@@ -5,7 +5,7 @@ from typing import AsyncGenerator, Callable
 import httpx
 
 from .config import Settings
-from .models import ExportModel, ExportParams, ExportsModel
+from .models import ExportModel, ExportParams, ExportsFormat, ExportsModel
 from .sftp import SSHClient, SSHClientFactory
 
 
