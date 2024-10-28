@@ -18,7 +18,7 @@ class ExportParams(BaseModel):
 class ExportModel(BaseModel):
     ref_id: UUID
     experiment_id: str
-    # timestamp: AwareDatetime
+    timestamp: AwareDatetime
     type: EventType
     url: HttpUrl
     uploaded_at: AwareDatetime
