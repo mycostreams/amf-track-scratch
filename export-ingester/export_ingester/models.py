@@ -30,3 +30,4 @@ class ExportsModel(BaseModel):
 
 
 ExportList = TypeAdapter(list[ExportModel])
+ExportsFormat = TypeAdapter(ExportsModel)
