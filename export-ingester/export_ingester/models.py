@@ -1,18 +1,29 @@
 from enum import StrEnum, auto
+from typing import Generic, TypeVar
 from uuid import UUID
 
 from pydantic import AwareDatetime, BaseModel, HttpUrl, TypeAdapter
+
+DataT = TypeVar("DataT")
+
+
+class Params(BaseModel):
+    limit: int = 250
+
+
+class PaginatedResponse(BaseModel, Generic[DataT]):
+    count: int
+    data: list[DataT]
 
 
 class EventType(StrEnum):
     STITCH = auto()
 
 
-class ExportParams(BaseModel):
+class ExportParams(Params):
     event_type: EventType = EventType.STITCH
     start: AwareDatetime
     end: AwareDatetime
-    limit: int = 250
 
 
 class ExportModel(BaseModel):
@@ -24,9 +35,36 @@ class ExportModel(BaseModel):
     uploaded_at: AwareDatetime
 
 
-class ExportsModel(BaseModel):
-    count: int
-    data: list[ExportModel]
+class ExportsModel(PaginatedResponse[ExportModel]):
+    pass
 
 
 ExportList = TypeAdapter(list[ExportModel])
+
+
+class ArchiveParams(Params):
+    experiment_id: str
+    limit: int = 250
+
+
+class ArchiveSummaryModel(BaseModel):
+    url: str
+
+
+class ArchiveMember(BaseModel):
+    member_key: str
+    ref_id: UUID
+    timestamp: AwareDatetime
+    checksum: str | None
+    size: int | None
+
+
+class ArchiveModel(BaseModel):
+    id: UUID
+    path: str
+    experiment_id: str
+    created_at: AwareDatetime
+    members: list[ArchiveMember]
+
+
+ArchivesList = TypeAdapter(list[ArchiveModel])
