@@ -5,7 +5,7 @@ from typing import AsyncGenerator, Callable
 import httpx
 
 from .config import Settings
-from .models import ExportList, ExportModel, ExportParams
+from .models import ExportModel, ExportParams, ExportsModel
 from .sftp import SSHClient, SSHClientFactory
 
 
@@ -22,7 +22,7 @@ class APIClient:
         self,
         params: ExportParams,
         *,
-        _mapper: Callable[[bytes], list[ExportModel]] | None = None,
+        _mapper: Callable[[bytes], ExportsModel] | None = None,
     ) -> list[ExportModel]:
         response = await self.client.get(
             urllib.parse.urljoin(self.base_url, "/api/1/exports"),
@@ -30,8 +30,9 @@ class APIClient:
             params=params.model_dump(mode="json", by_alias=True),
         )
 
-        mapper = _mapper or ExportList.validate_json
-        return mapper(response.content)
+        mapper = _mapper or ExportsModel.validate_json
+        exports_model = mapper(response.content)  # Parse the full response
+        return exports_model.data  # Return only the list of ExportModel
 
 
 class ExportIngester:
