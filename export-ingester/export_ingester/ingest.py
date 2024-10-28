@@ -14,43 +14,25 @@ class APIClient:
         self,
         base_url: str,
         client: httpx.AsyncClient,
-        *,
-        _mapper: Callable[[bytes], ExportsModel] = ExportsModel.model_validate_json,
     ):
         self.base_url = base_url
         self.client = client
-        self.mapper = _mapper
 
-    async def get_exports(self, params: ExportParams) -> list[ExportModel]:
-        return [item async for item in self.stream_exports(params)]
-
-    async def stream_exports(
+    async def get_exports(
         self,
         params: ExportParams,
-    ) -> AsyncGenerator[ExportModel, None]:
-        default_params = params.model_dump(mode="json", by_alias=True)
-
-        initial_data = await self._get_response({"offset": 0, **default_params})
-        for item in initial_data.data:
-            yield item
-
-        tasks: list[asyncio.Task[ExportsModel]] = []
-        for index in range(initial_data.count // params.limit):
-            next_params = {"offset": (index + 1) * params.limit, **default_params}
-            tasks.append(asyncio.create_task(self._get_response(next_params)))
-
-        for task in asyncio.as_completed(tasks):
-            next_data = await task
-            for item in next_data.data:
-                yield item
-
-    async def _get_response(self, params: dict) -> ExportsModel:
+        *,
+        _mapper: Callable[[bytes], ExportsModel] | None = None,
+    ) -> list[ExportModel]:
         response = await self.client.get(
             urllib.parse.urljoin(self.base_url, "/api/1/exports"),
             headers={"Host": "fastapi.localhost"},
-            params=params,
+            params=params.model_dump(mode="json", by_alias=True),
         )
-        return self.mapper(response.content)
+
+        mapper = _mapper or ExportsFormat.validate_json
+        exports_model = mapper(response.content)  # Parse the full response
+        return exports_model.data  # Return only the list of ExportModel
 
 
 class ExportIngester:
