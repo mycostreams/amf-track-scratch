@@ -15,9 +15,7 @@ async def main():
     date_ = date.today() - timedelta(days=time_range)
     start, end = get_range(date_, time_range)
     async with get_managed_export_ingester(settings) as export_ingester:
-        await export_ingester.ingest(
-            remote, ExportParams(start=start, end=end)
-        )
+        await export_ingester.ingest(remote, ExportParams(start=start, end=end))
         await export_ingester.run_sbatch_command(settings.SBATCH_COMMAND, remote)
 
 
