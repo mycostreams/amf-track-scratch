@@ -13,7 +13,7 @@ services:
       SFTP_PASSWORD: ${SFTP_PASSWORD:-pass}
       SFTP_HOST: ${SFTP_HOST:-sftp}
       SBATCH_COMMAND: ${SBATCH_COMMAND:-sbatch}
-      TIME_RANGE: ${SBATCH_COMMAND:4}
+      TIME_RANGE: ${SBATCH_COMMAND:-4}
 
     depends_on:
       redis:
