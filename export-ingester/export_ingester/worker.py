@@ -25,14 +25,17 @@ async def startup(ctx: dict):
 
 async def run_ingestion(ctx: dict, *, _date: date | None = None):
     settings: Settings = ctx["settings"]
-
-    date_ = _date or (date.today() - timedelta(days=1))
-    start, end = get_range(date_)
+    remote = f"/scratch-shared/amftrack2024/daily/{date.today()}.json"
+    time_range = 1
+    # TODO these two need to become either parameter or environment variables
+    date_ = _date or (date.today() - timedelta(days=time_range))
+    start, end = get_range(date_, time_range)
 
     async with get_managed_export_ingester(settings) as ingester:
         await ingester.ingest(
             f"daily-uploads/{date_}.json", ExportParams(start=start, end=end)
         )
+        await ingester.run_sbatch_command(settings.SBATCH_COMMAND, remote)
 
 
 class WorkerSettings:
