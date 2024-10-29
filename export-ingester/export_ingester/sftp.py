@@ -4,7 +4,7 @@ from typing import AsyncGenerator, Callable
 
 import asyncssh
 
-from .models import ExportList, ExportModel
+from .api_client.models import ExportList, ExportModel
 
 
 class SFTPClient:

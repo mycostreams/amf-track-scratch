@@ -6,8 +6,8 @@ from arq import cron
 from arq.connections import RedisSettings
 from zoneinfo import ZoneInfo
 
+from .api_client import ExportParams
 from .ingest import Settings, get_managed_export_ingester
-from .models import ExportParams
 from .utils import get_range
 
 

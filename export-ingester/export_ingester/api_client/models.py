@@ -35,19 +35,21 @@ class ExportModel(BaseModel):
     uploaded_at: AwareDatetime
 
 
-class ExportsModel(PaginatedResponse[ExportModel]):
-    pass
-
-
 ExportList = TypeAdapter(list[ExportModel])
 
 
 class ArchiveParams(Params):
     experiment_id: str
-    limit: int = 250
 
 
-class ArchiveSummaryModel(BaseModel):
+class BaseArchiveModel(BaseModel):
+    id: UUID
+    path: str
+    experiment_id: str
+    created_at: AwareDatetime
+
+
+class ArchiveSummaryModel(BaseArchiveModel):
     url: str
 
 
@@ -59,11 +61,7 @@ class ArchiveMember(BaseModel):
     size: int | None
 
 
-class ArchiveModel(BaseModel):
-    id: UUID
-    path: str
-    experiment_id: str
-    created_at: AwareDatetime
+class ArchiveModel(BaseArchiveModel):
     members: list[ArchiveMember]
 
 

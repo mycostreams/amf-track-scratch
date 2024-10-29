@@ -1,11 +1,37 @@
 from datetime import timedelta
-from typing import Callable, Generator, Iterable
+from typing import Callable, Generator, Iterable, TypeVar
 from uuid import uuid4
 
-from export_ingester.models import ArchiveMember, ArchiveModel, EventType, ExportModel
+from export_ingester.api_client.models import (
+    ArchiveMember,
+    ArchiveModel,
+    EventType,
+    ExportModel,
+)
 from export_ingester.utils import now
 
-from .models import ArchivesFilterParams, ExportsFilterParams
+from .models import PaginationParams
+
+T = TypeVar("T")
+
+
+def filter_data(
+    data: list[T],
+    filters: list[Callable[[T], bool]],
+    pagination_params: PaginationParams,
+) -> tuple[int, list[T]]:
+    filtered_data: Iterable[T] = data
+    for filter_ in filters:
+        filtered_data = filter(filter_, filtered_data)
+
+    filtered_data = list(filtered_data)
+
+    count = len(filtered_data)
+    data = filtered_data[
+        pagination_params.offset : pagination_params.offset + pagination_params.limit
+    ]
+
+    return count, data
 
 
 def create_archive_data(count: int = 30) -> Generator[ArchiveModel, None, None]:
@@ -29,28 +55,6 @@ def create_archive_data(count: int = 30) -> Generator[ArchiveModel, None, None]:
         )
 
 
-def filter_archive_data(
-    archives: list[ArchiveModel],
-    filter_params: ArchivesFilterParams,
-) -> tuple[int, list[ArchiveModel]]:
-    filters: list[Callable[[ArchiveModel], bool]] = [
-        lambda obj: obj.experiment_id == filter_params.experiment_id,
-    ]
-
-    filtered_archives: Iterable[ArchiveModel] = archives
-    for filter_ in filters:
-        filtered_archives = filter(filter_, filtered_archives)
-
-    filtered_archives = list(filtered_archives)
-
-    count = len(filtered_archives)
-    data = filtered_archives[
-        filter_params.offset : filter_params.offset + filter_params.limit
-    ]
-
-    return count, data
-
-
 def create_export_data(count: int = 500) -> Generator[ExportModel, None, None]:
     now_ = now()
     for index in range(1, count):
@@ -63,27 +67,3 @@ def create_export_data(count: int = 500) -> Generator[ExportModel, None, None]:
             uploaded_at=src_timestamp,
             timestamp=src_timestamp,
         )
-
-
-def filter_export_data(
-    exports: list[ExportModel],
-    filter_params: ExportsFilterParams,
-) -> tuple[int, list[ExportModel]]:
-    filters: list[Callable[[ExportModel], bool]] = [
-        lambda obj: obj.type == filter_params.event_type,
-        lambda obj: obj.timestamp < filter_params.end,
-        lambda obj: obj.timestamp > filter_params.start,
-    ]
-
-    filtered_exports: Iterable[ExportModel] = exports
-    for filter_ in filters:
-        filtered_exports = filter(filter_, filtered_exports)
-
-    filtered_exports = list(filtered_exports)
-
-    count = len(filtered_exports)
-    data = filtered_exports[
-        filter_params.offset : filter_params.offset + filter_params.limit
-    ]
-
-    return count, data

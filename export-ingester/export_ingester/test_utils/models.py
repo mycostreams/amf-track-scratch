@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from pydantic import AwareDatetime, BaseModel, Field, PositiveInt
 
-from export_ingester.models import EventType
+from export_ingester.api_client.models import EventType
 from export_ingester.utils import now
 
 
