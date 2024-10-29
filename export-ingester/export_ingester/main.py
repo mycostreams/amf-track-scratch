@@ -1,9 +1,9 @@
 import asyncio
 from datetime import date
 
+from .api_client import ExportParams
 from .config import Settings
 from .ingest import get_managed_export_ingester
-from .models import ExportParams
 
 
 async def main():
