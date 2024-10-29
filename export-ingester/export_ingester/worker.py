@@ -26,7 +26,7 @@ async def startup(ctx: dict):
 async def run_ingestion(ctx: dict, *, _date: date | None = None):
     settings: Settings = ctx["settings"]
     remote = f"/scratch-shared/amftrack2024/daily/{date.today()}.json"
-    time_range = settings["TIME_RANGE"]
+    time_range = settings.TIME_RANGE
     # TODO these two need to become either parameter or environment variables
     date_ = _date or (date.today() - timedelta(days=1))
     start, end = get_range(date_, time_range)
