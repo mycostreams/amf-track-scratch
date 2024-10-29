@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     BASE_URL: HttpUrl
     SBATCH_COMMAND: str
-    TIME_RANGE: int
+    TIME_RANGE: str
     model_config = SettingsConfigDict(
         env_file=Path(__file__).parent.parent / ".env",
         env_file_encoding="utf-8",

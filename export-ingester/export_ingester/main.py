@@ -10,7 +10,7 @@ from .utils import get_range
 async def main():
     settings = Settings()
     remote = f"/scratch-shared/amftrack2024/daily/{date.today()}.json"
-    time_range = 4
+    time_range = int(settings.TIME_RANGE)
     # TODO these two need to become either parameter or environment variables
     date_ = date.today() - timedelta(days=1)
     start, end = get_range(date_, time_range)
