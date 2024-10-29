@@ -12,7 +12,7 @@ async def main():
     remote = f"/scratch-shared/amftrack2024/daily/{date.today()}.json"
     time_range = 4
     # TODO these two need to become either parameter or environment variables
-    date_ = date.today() - timedelta(days=time_range)
+    date_ = date.today() - timedelta(days=1)
     start, end = get_range(date_, time_range)
     async with get_managed_export_ingester(settings) as export_ingester:
         await export_ingester.ingest(remote, ExportParams(start=start, end=end))

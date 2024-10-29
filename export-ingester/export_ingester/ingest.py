@@ -55,4 +55,3 @@ async def get_managed_export_ingester(
 
     await stack.aclose()
 
-    await stack.aclose()
