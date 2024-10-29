@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 from pydantic import HttpUrl
@@ -10,7 +11,8 @@ class Settings(BaseSettings):
     SFTP_HOST: str
 
     BASE_URL: HttpUrl
-
+    SBATCH_COMMAND: str
+    TIME_RANGE: timedelta = timedelta(days=4)
     model_config = SettingsConfigDict(
         env_file=Path(__file__).parent.parent / ".env",
         env_file_encoding="utf-8",
