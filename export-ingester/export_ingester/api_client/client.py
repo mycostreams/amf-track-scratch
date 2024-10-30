@@ -3,7 +3,6 @@ import urllib.parse
 from enum import StrEnum
 from functools import partial
 from typing import AsyncGenerator, Callable, TypeVar
-import logging
 
 import httpx
 
@@ -20,8 +19,6 @@ from .models import (
 
 T = TypeVar("T")
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 class Routes(StrEnum):
     EXPORTS = "/api/1/exports"
@@ -48,7 +45,6 @@ class APIClient:
         self,
         params: ArchiveParams,
     ) -> list[ArchiveModel]:
-        logger.info("Fetching archives with parameters: %s", params)
         return [item async for item in self._stream_archives(params)]
 
     async def _stream_exports(
@@ -89,7 +85,6 @@ class APIClient:
         get_response = partial(
             self._get_response, url, paginator_cls.model_validate_json
         )
-        logger.debug("Requesting initial data from %s with params: %s", url, default_params)
         initial_data = await get_response({"offset": 0, **default_params})
         for item in initial_data.data:
             yield item
@@ -111,12 +106,10 @@ class APIClient:
         params: dict | None = None,
     ) -> T:
         async with self.sem:
-            logger.debug("Sending request to %s with params: %s", endpoint, params)
             response = await self.client.get(
                 urllib.parse.urljoin(self.base_url, endpoint),
                 headers={"Host": "fastapi.localhost"},
                 params=params,
             )
-            logger.debug("response is ", response.content)
 
             return mapper(response.content)
