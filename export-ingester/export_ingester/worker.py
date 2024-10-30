@@ -27,8 +27,8 @@ async def run_ingestion(ctx: dict, *, _date: date | None = None):
     settings: Settings = ctx["settings"]
     remote = f"/scratch-shared/amftrack2024/daily/{date.today()}.json"
     # TODO these two need to become either parameter or environment variables
-    start = get_date_start(date.today())
-    end = start - settings.TIME_RANGE
+    end = get_date_start(date.today())
+    start = end - settings.TIME_RANGE
     async with get_managed_export_ingester(settings) as ingester:
         await ingester.ingest(remote, ExportParams(start=start, end=end))
         await ingester.run_sbatch_command(settings.SBATCH_COMMAND, remote)
