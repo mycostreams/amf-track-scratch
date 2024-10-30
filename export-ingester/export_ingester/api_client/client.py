@@ -117,4 +117,6 @@ class APIClient:
                 headers={"Host": "fastapi.localhost"},
                 params=params,
             )
+            logger.debug("response is ", response.content)
+
             return mapper(response.content)
