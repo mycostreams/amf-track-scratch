@@ -3,7 +3,7 @@ from typing import AsyncGenerator
 
 import httpx
 
-from .api_client import APIClient, ExportParams
+from .api_client import APIClient, ArchiveParams, ExportParams
 from .config import Settings
 from .sftp import SSHClient, SSHClientFactory
 
@@ -25,6 +25,16 @@ class ExportIngester:
         await self.ssh_client.pipe_exports(
             remote_path,
             await self.api_client.get_exports(params),
+        )
+
+    async def ingest_archive(
+        self,
+        remote_path: str,
+        params: ArchiveParams,
+    ):
+        await self.ssh_client.pipe_exports_archive(
+            remote_path,
+            await self.api_client.get_archives(params),
         )
 
     async def run_sbatch_command(self, sbatch_command, remote):
