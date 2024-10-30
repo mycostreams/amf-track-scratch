@@ -8,7 +8,7 @@ DataT = TypeVar("DataT")
 
 
 class Params(BaseModel):
-    limit: int = 250
+    limit: int = 99
 
 
 class PaginatedResponse(BaseModel, Generic[DataT]):
