@@ -85,7 +85,6 @@ class APIClient:
         get_response = partial(
             self._get_response, url, paginator_cls.model_validate_json
         )
-
         initial_data = await get_response({"offset": 0, **default_params})
         for item in initial_data.data:
             yield item
@@ -112,4 +111,5 @@ class APIClient:
                 headers={"Host": "fastapi.localhost"},
                 params=params,
             )
+
             return mapper(response.content)

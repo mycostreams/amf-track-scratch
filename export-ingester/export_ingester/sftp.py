@@ -5,7 +5,7 @@ from typing import AsyncGenerator, Callable
 
 import asyncssh
 
-from .api_client.models import ExportList, ExportModel
+from .api_client.models import ArchiveModel, ArchivesList, ExportList, ExportModel
 
 
 class SSHClient:
@@ -29,6 +29,21 @@ class SSHClient:
         _mapper: Callable[[list[ExportModel]], bytes] | None = None,
     ):
         mapper = _mapper or partial(ExportList.dump_json, indent=4)
+        async with self.conn.start_sftp_client() as sftp_client:
+            async with sftp_client.open(path, "wb") as f:
+                await f.write(mapper(exports))
+
+    # TODO: Maybe these two could be factorized,
+    # but not 100% sure how to do this properly
+
+    async def pipe_exports_archive(
+        self,
+        path: str,
+        exports: list[ArchiveModel],
+        *,
+        _mapper: Callable[[list[ArchiveModel]], bytes] | None = None,
+    ):
+        mapper = _mapper or partial(ArchivesList.dump_json, indent=4)
         async with self.conn.start_sftp_client() as sftp_client:
             async with sftp_client.open(path, "wb") as f:
                 await f.write(mapper(exports))

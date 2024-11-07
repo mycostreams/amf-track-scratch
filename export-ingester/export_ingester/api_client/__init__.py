@@ -1,4 +1,4 @@
 from .client import APIClient
-from .models import ExportParams
+from .models import ArchiveParams, ExportParams
 
-__all__ = ("APIClient", "ExportParams")
+__all__ = ("APIClient", "ExportParams", "ArchiveParams")
