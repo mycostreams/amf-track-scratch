@@ -1,0 +1,14 @@
+---
+
+services:
+  state-manager:
+    image: mycostreams/prince-archiver:latest
+    volumes:
+      - tsu_exp003_mount:/data
+
+volumes:
+  tsu_exp003_mount:
+    driver_opts:
+      type: cifs
+      device: //tsu-exp003.amolf.nl/Data/Images
+      o: username=${AMOLF_USERNAME},password=${AMOLF_PASSWORD}
