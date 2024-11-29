@@ -1,12 +1,19 @@
 ---
 
 services:
-  state-manager:
-    image: mycostreams/prince-archiver:latest
+  benchmark:
+    image: python:3.12-slim-bullseye
     volumes:
-      - tsu_exp003_mount:/data
+      - ./main.py:/app/main.py
+      - prince_mount:/data/prince/Images
+      - tsu_exp003_mount:/data/tsu-exp003/Images
 
 volumes:
+  prince_mount:
+    driver_opts:
+      type: cifs
+      device: //tsu-exp003.amolf.nl/Data/Images
+      o: username=${AMOLF_USERNAME},password=${AMOLF_PASSWORD}
   tsu_exp003_mount:
     driver_opts:
       type: cifs
