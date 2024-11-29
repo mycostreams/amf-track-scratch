@@ -25,7 +25,7 @@ def main(src: Path):
     logging.info("Tarring `%s`", src)
     with TemporaryDirectory() as temp_dir:
         timer = Timer()
-        shutil.copytree(src, temp_dir)
+        shutil.copytree(src, temp_dir, dirs_exist_ok=True)
 
         logging.info("Tarred `%s` in %f", src, timer.delta)
 
