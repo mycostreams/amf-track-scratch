@@ -12,7 +12,7 @@ volumes:
   prince_mount:
     driver_opts:
       type: cifs
-      device: //tsu-exp003.amolf.nl/Data/Images
+      device: //prince.amolf.nl/Data/Prince2/Images
       o: username=${AMOLF_USERNAME},password=${AMOLF_PASSWORD}
   tsu_exp003_mount:
     driver_opts:
