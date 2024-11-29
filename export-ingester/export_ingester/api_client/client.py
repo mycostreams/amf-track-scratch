@@ -1,5 +1,4 @@
 import asyncio
-import urllib.parse
 from enum import StrEnum
 from functools import partial
 from typing import AsyncGenerator, Callable, TypeVar
@@ -28,12 +27,10 @@ class Routes(StrEnum):
 class APIClient:
     def __init__(
         self,
-        base_url: str,
         client: httpx.AsyncClient,
         *,
         max_concurrency: int = 10,
     ):
-        self.base_url = base_url
         self.client = client
 
         self.sem = asyncio.Semaphore(max_concurrency)
@@ -106,10 +103,5 @@ class APIClient:
         params: dict | None = None,
     ) -> T:
         async with self.sem:
-            response = await self.client.get(
-                urllib.parse.urljoin(self.base_url, endpoint),
-                headers={"Host": "fastapi.localhost"},
-                params=params,
-            )
-
+            response = await self.client.get(endpoint, params=params)
             return mapper(response.content)
