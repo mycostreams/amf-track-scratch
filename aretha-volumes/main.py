@@ -1,7 +1,7 @@
 from pathlib import Path
 import logging
 from uuid import uuid4
-import tarfile
+import shutil
 from tempfile import TemporaryDirectory
 import argparse
 
@@ -24,11 +24,8 @@ class Timer:
 def main(src: Path):
     logging.info("Tarring `%s`", src)
     with TemporaryDirectory() as temp_dir:
-        archive_path = Path(temp_dir) / f"{uuid4().hex}.tar"
-
         timer = Timer()
-        with tarfile.open(archive_path, "a") as tar:
-            tar.add(src, arcname=".")
+        shutil.copytree(src, temp_dir)
 
         logging.info("Tarred `%s` in %f", src, timer.delta)
 
