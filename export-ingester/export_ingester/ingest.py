@@ -53,13 +53,18 @@ async def get_managed_export_ingester(
         settings.SFTP_PASSWORD,
         settings.SFTP_HOST,
     )
-    http_client = await stack.enter_async_context(httpx.AsyncClient())
+
     ssh_client = await stack.enter_async_context(ssh_client_factory.get_ssh_client())
+
+    http_client = await stack.enter_async_context(
+        httpx.AsyncClient(
+            base_url=str(settings.BASE_URL),
+            headers={"Host": "api.localhost"},
+        )
+    )
+
     yield ExportIngester(
-        APIClient(
-            str(settings.BASE_URL),
-            http_client,
-        ),
+        APIClient(http_client),
         ssh_client,
     )
 
