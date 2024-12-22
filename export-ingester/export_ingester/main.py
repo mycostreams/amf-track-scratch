@@ -14,7 +14,7 @@ async def main():
     end = get_date_start(date.today())
     start = end - settings.TIME_RANGE
     async with get_managed_export_ingester(settings) as export_ingester:
-        await export_ingester.ingest(remote, ExportParams(start=start, end=end))
+        # await export_ingester.ingest(remote, ExportParams(start=start, end=end))
         await export_ingester.run_sbatch_command(settings.SBATCH_COMMAND, remote)
 
 
