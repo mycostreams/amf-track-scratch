@@ -37,9 +37,9 @@ class ExportIngester:
             await self.api_client.get_archives(params),
         )
 
-    async def run_sbatch_command(self, sbatch_command, remote):
+    async def run_sbatch_command(self, sbatch_command):
         """Runs the sbatch command on the remote server via SSH."""
-        await self.ssh_client.remote_sbatch(sbatch_command, remote)
+        await self.ssh_client.remote_sbatch(sbatch_command)
 
 
 @asynccontextmanager
