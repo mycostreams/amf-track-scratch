@@ -29,7 +29,7 @@ async def run_ingestion(ctx: dict, *, _date: date | None = None):
         await ingester.run_sbatch_command(settings.SBATCH_COMMAND)
 
 async def run_archiving(ctx: dict, *, _date: date | None = None):
-    archive_command = "srun --time=3:00:00 --partition=staging --nodes=1 --ntasks=1 surf-archiver-cli archive 2024-12-19"
+    archive_command = "srun --time=22:00:00 --partition=staging --nodes=1 --ntasks=1 surf-archiver-cli archive 2024-12-19"
     settings: Settings = ctx["settings"]
     async with get_managed_export_ingester(settings) as ingester:
         await ingester.run_sbatch_command(archive_command)

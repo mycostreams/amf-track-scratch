@@ -12,7 +12,7 @@ async def main():
     async with get_managed_export_ingester(settings) as export_ingester:
         # await export_ingester.ingest(remote, ExportParams(start=start, end=end))
         # await export_ingester.run_sbatch_command(settings.SBATCH_COMMAND)
-        archive_command = "srun --time=3:00:00 --partition=staging --nodes=1 --ntasks=1 surf-archiver-cli archive 2024-12-19"
+        archive_command = "srun --time=22:00:00 --partition=staging --nodes=1 --ntasks=1 surf-archiver-cli archive 2024-12-19"
         async with get_managed_export_ingester(settings) as ingester:
             await ingester.run_sbatch_command(archive_command)
 
