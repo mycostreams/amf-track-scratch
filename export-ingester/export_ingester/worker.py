@@ -28,12 +28,19 @@ async def run_ingestion(ctx: dict, *, _date: date | None = None):
     async with get_managed_export_ingester(settings) as ingester:
         await ingester.run_sbatch_command(settings.SBATCH_COMMAND)
 
+async def run_archiving(ctx: dict, *, _date: date | None = None):
+    archive_command = "srun --time=3:00:00 --partition=staging --nodes=1 --ntasks=1 surf-archiver-cli archive 2024-12-19"
+    settings: Settings = ctx["settings"]
+    async with get_managed_export_ingester(settings) as ingester:
+        await ingester.run_sbatch_command(archive_command)
 
 class WorkerSettings:
     cron_jobs = [
         cron(run_ingestion, hour={11}, minute={21}),
     ]
-
+    cron_jobs = [
+        cron(run_archiving, hour={1}, minute={21}),
+    ]
     timezone = ZoneInfo("Europe/Amsterdam")
 
     on_startup = startup
