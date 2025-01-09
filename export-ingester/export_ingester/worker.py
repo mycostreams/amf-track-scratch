@@ -36,10 +36,9 @@ async def run_archiving(ctx: dict, *, _date: date | None = None):
 
 class WorkerSettings:
     cron_jobs = [
-        cron(run_ingestion, hour={11}, minute={21}),
-    ]
-    cron_jobs = [
         cron(run_archiving, hour={1}, minute={21}),
+        cron(run_ingestion, hour={11}, minute={21}),
+
     ]
     timezone = ZoneInfo("Europe/Amsterdam")
 
